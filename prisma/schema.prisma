@@ -1,0 +1,108 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("MySQL_URL")
+  relationMode = "prisma"
+}
+
+model Role {
+  id Int @id @default(autoincrement())
+  role_name String
+}
+
+model Admins {
+  id Int @id @default(autoincrement())
+  email String
+  password String @db.Text
+  role Int
+  service Services[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Users {
+  id Int @id @default(autoincrement())
+  email String
+  password String @db.Text
+  role Int
+  alamat String? @db.Text
+  provinsi String?
+  kota String?
+  kecamatan String?
+  transactions Transactions[]
+  services Services[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Products {
+  id Int @id @default(autoincrement())
+  nama String 
+  harga Int
+  kategori String?
+  stock Int?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Kategori {
+  id Int @id @default(autoincrement())
+  name String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Transactions {
+  id Int @id @default(autoincrement())
+  date DateTime @unique
+  user Users @relation(fields: [user_id], references: [id])
+  user_id Int
+  items Items[]
+  final_price Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@index([user_id])
+}
+
+model Items{
+  id Int @id @default(autoincrement())
+  transaction Transactions @relation(fields: [tx_id], references: [id])
+  tx_id Int
+  product_name String
+  price Int
+  quantity Int @default(0)
+  total_price Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@index([tx_id])
+}
+
+model Services {
+  id Int @id @default(autoincrement())
+  date DateTime @unique
+  technician Admins? @relation(fields: [technician_id], references: [id])
+  technician_id Int?
+  user Users @relation(fields: [user_id], references: [id])
+  user_id Int
+  status Int
+  price Int?
+  wa_user String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@index([technician_id])
+  @@index([user_id])
+}
+
+model Service_Status {
+  id Int @id @default(autoincrement())
+  status_name String
+}
