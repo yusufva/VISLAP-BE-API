@@ -30,7 +30,7 @@ model Users {
   id Int @id @default(autoincrement())
   email String
   password String @db.Text
-  role Int
+  role Int @default(4)
   alamat String? @db.Text
   provinsi String?
   kota String?
@@ -92,7 +92,7 @@ model Services {
   technician_id Int?
   user Users @relation(fields: [user_id], references: [id])
   user_id Int
-  status Int
+  status Int @default(1)
   price Int?
   wa_user String?
   created_at DateTime @default(now())

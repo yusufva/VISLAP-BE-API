@@ -2,10 +2,15 @@
   "name": "projek-vislap",
   "version": "0.1.0",
   "private": true,
+  "prisma": {
+    "seed": "node prisma/seeds.js"
+  },
   "scripts": {
     "start": "nodemon ./bin/www"
   },
   "dependencies": {
+    "@prisma/client": "^4.16.2",
+    "bcryptjs": "^2.4.3",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
