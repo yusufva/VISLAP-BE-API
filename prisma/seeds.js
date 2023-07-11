@@ -5,24 +5,28 @@ const bcrypt = require("bcryptjs");
 async function account(){
     const adminList = [
         {
+            name: "dayat",
             email: "dayat@gmail.com",
-            password: bcrypt.hashSync("12345678", 8),
+            password: bcrypt.hashSync("12345678", 13),
             role: 1
         },
         {
+            name: "far",
             email: "far@gmail.com",
-            password: bcrypt.hashSync("12345678", 8),
+            password: bcrypt.hashSync("12345678", 13),
             role: 2
         },
         {
+            name: "ilzam",
             email: "ilzam@gmail.com",
-            password: bcrypt.hashSync("12345678", 8),
+            password: bcrypt.hashSync("12345678", 13),
             role: 3
         },
     ]
     const user = {
+        name: "user1",
         email: "pengguna@gmail.com",
-        password: bcrypt.hashSync("12345678", 8),
+        password: bcrypt.hashSync("12345678", 13),
         role: 4
     }
 

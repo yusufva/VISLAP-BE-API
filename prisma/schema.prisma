@@ -18,8 +18,9 @@ model Role {
 
 model Admins {
   id Int @id @default(autoincrement())
-  email String
+  email String @unique
   password String @db.Text
+  name String
   role Int
   service Services[]
   created_at DateTime @default(now())
@@ -28,13 +29,15 @@ model Admins {
 
 model Users {
   id Int @id @default(autoincrement())
-  email String
+  email String @unique
   password String @db.Text
+  name String
   role Int @default(4)
   alamat String? @db.Text
   provinsi String?
   kota String?
   kecamatan String?
+  refresh_token String @db.Text
   transactions Transactions[]
   services Services[]
   created_at DateTime @default(now())
