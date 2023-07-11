@@ -63,7 +63,7 @@ router.post('/login', async (req,res)=>{
     res.cookie('refreshToken', refreshToken,{
       httpOnly: true,
       maxAge: 72*60*60*1000,
-      // secure: true //comment this line for localhost
+      secure: true //comment this line for localhost
     });
     res.json({
       message : "user successfully loged in",
