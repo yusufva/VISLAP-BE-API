@@ -6,7 +6,8 @@ const verifyToken = async (req,res,next) => {
     if(token == null) return res.sendStatus(401);
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decode) =>{
         if(err) return res.sendStatus(403);
-        req.id = decode.id;
+        req.id = decode.userId;
+        req.name = decode.name;
         req.role = decode.role;
         next()
     })
