@@ -22,6 +22,7 @@ model Admins {
   password String @db.Text
   name String
   role Int
+  refresh_token String? @db.Text
   service Services[]
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -37,7 +38,7 @@ model Users {
   provinsi String?
   kota String?
   kecamatan String?
-  refresh_token String @db.Text
+  refresh_token String? @db.Text
   transactions Transactions[]
   services Services[]
   created_at DateTime @default(now())
