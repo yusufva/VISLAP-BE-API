@@ -34,7 +34,7 @@ router.post('/registers', async (req,res)=>{
         password: hashPassword
       }
     })
-    res.json({message:"user has been successfully registered"})
+    res.status(201).json({message:"user has been successfully registered"})
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       // The .code property can be accessed in a type-safe manner
@@ -95,7 +95,23 @@ router.get('/profile', verifyToken, async(req,res)=>{
 })
 
 router.put("/profile/:id", async(req,res)=>{
-  
+  const paramId = req.params.id
+  const schema = {
+    name : 'string',
+    alamat: 'email',
+    provinsi: 'string',
+    kota: 'string',
+    kecamatan : 'string'
+  }
+  const validate = v.validate(req.body, schema);
+  if (validate.length) return res.status(400).json(validate);
+  try {
+    const id = parseInt(paramId);
+    await prisma.users.update({ where:{ id:id }, data:req.body })
+    return res.json({message:"user profile successfully updated"})
+  } catch (e) {
+    
+  }
 })
 
 router.delete('/logout', async(req,res)=>{
