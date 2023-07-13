@@ -50,6 +50,7 @@ model Products {
   nama String 
   harga Int
   kategori String?
+  photo String?
   stock Int?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
