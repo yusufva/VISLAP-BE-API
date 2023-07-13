@@ -8,6 +8,8 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var adminsRouter = require('./routes/admins')
+var kategoriRouter = require('./routes/kategori')
+var productRouter = require('./routes/products')
 var refreshTokenRouter = require('./routes/refreshToken')
 
 var app = express();
@@ -24,5 +26,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/token', refreshTokenRouter);
 app.use('/admins', adminsRouter)
+app.use('/category', kategoriRouter)
+app.use('/products', productRouter)
 
 module.exports = app;
