@@ -8,9 +8,10 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var adminsRouter = require('./routes/admins')
-var kategoriRouter = require('./routes/kategori')
-var productRouter = require('./routes/products')
-var refreshTokenRouter = require('./routes/refreshToken')
+var kategoriRouter = require('./routes/kategori');
+var productRouter = require('./routes/products');
+var refreshTokenRouter = require('./routes/refreshToken');
+var transactionRouter = require('./routes/transaction');
 
 var app = express();
 
@@ -23,10 +24,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/token', refreshTokenRouter);
-app.use('/admins', adminsRouter)
-app.use('/category', kategoriRouter)
-app.use('/products', productRouter)
+app.use('/users', usersRouter); //login user
+app.use('/token', refreshTokenRouter); //refresh access token
+app.use('/admins', adminsRouter); //login admin
+app.use('/category', kategoriRouter); //category product
+app.use('/products', productRouter); //products
+app.use('/txs', transactionRouter); //transactions
 
 module.exports = app;
