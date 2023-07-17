@@ -65,7 +65,7 @@ model Kategori {
 
 model Transactions {
   id Int @id @default(autoincrement())
-  date DateTime @unique
+  date DateTime @unique @default(now())
   user Users @relation(fields: [user_id], references: [id])
   user_id Int
   items Items[]
