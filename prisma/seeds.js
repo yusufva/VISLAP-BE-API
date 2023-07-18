@@ -79,6 +79,40 @@ async function serv_status(){
     }
 }
 
+async function transaksi_status(){
+    const list =[
+        {
+            status: "Menunggu Pembayaran"
+        },
+        {
+            status: "Pesanan Diproses"
+        },
+        {
+            status: "Menunggu pengiriman/pengambilan"
+        },
+        {
+            status: "Selesai"
+        },
+        {
+            status: "Cancelled"
+        },
+    ]
+
+    for (let data of list){
+        await prisma.transaksi_Status.create({data:data})
+    }
+}
+
+transaksi_status()
+    .then(async () => {
+        await prisma.$disconnect()
+    })
+    .catch(async e => {
+        console.log(e)
+        await prisma.$disconnect()
+        process.exit(1)
+    })
+
 role()
     .then(async () => {
         await prisma.$disconnect()
