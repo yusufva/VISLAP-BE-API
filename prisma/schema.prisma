@@ -6,108 +6,121 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("MySQL_URL")
+  provider     = "mysql"
+  url          = env("MySQL_URL")
   relationMode = "prisma"
 }
 
 model Role {
-  id Int @id @default(autoincrement())
+  id        Int    @id @default(autoincrement())
   role_name String
 }
 
 model Admins {
-  id Int @id @default(autoincrement())
-  email String @unique
-  password String @db.Text
-  name String
-  role Int
-  refresh_token String? @db.Text
-  service Services[]
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id            Int        @id @default(autoincrement())
+  email         String     @unique
+  password      String     @db.Text
+  name          String
+  role          Int
+  refresh_token String?    @db.Text
+  service       Services[]
+  created_at    DateTime   @default(now())
+  updated_at    DateTime   @updatedAt
 }
 
 model Users {
-  id Int @id @default(autoincrement())
-  email String @unique
-  password String @db.Text
-  name String
-  role Int @default(4)
-  alamat String? @db.Text
-  provinsi String?
-  kota String?
-  kecamatan String?
-  refresh_token String? @db.Text
-  transactions Transactions[]
-  services Services[]
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id            Int            @id @default(autoincrement())
+  email         String         @unique
+  password      String         @db.Text
+  name          String
+  role          Int            @default(4)
+  alamat        String?        @db.Text
+  provinsi      String?
+  kota          String?
+  kecamatan     String?
+  refresh_token String?        @db.Text
+  transactions  Transactions[]
+  services      Services[]
+  created_at    DateTime       @default(now())
+  updated_at    DateTime       @updatedAt
 }
 
 model Products {
-  id Int @id @default(autoincrement())
-  nama String 
-  harga Int
-  kategori String?
-  photo String?
-  stock Int?
+  id         Int      @id @default(autoincrement())
+  nama       String
+  harga      Int
+  kategori   String?
+  photo      String?
+  stock      Int?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
 
 model Kategori {
-  id Int @id @default(autoincrement())
-  name String
+  id         Int      @id @default(autoincrement())
+  name       String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
 
 model Transactions {
-  id Int @id @default(autoincrement())
-  date DateTime @unique @default(now())
-  user Users @relation(fields: [user_id], references: [id])
-  user_id Int
-  items Items[]
+  id          Int              @id @default(autoincrement())
+  date        DateTime         @unique @default(now())
+  user        Users            @relation(fields: [user_id], references: [id])
+  user_id     Int
+  items       Items[]
   final_price Int
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  status      Transaksi_Status @relation(fields: [status_id], references: [id])
+  status_id   Int              @default(1)
+  expiration  DateTime?
+  created_at  DateTime         @default(now())
+  updated_at  DateTime         @updatedAt
 
   @@index([user_id])
+  @@index([status_id])
 }
 
-model Items{
-  id Int @id @default(autoincrement())
-  transaction Transactions @relation(fields: [tx_id], references: [id])
-  tx_id Int
+model Items {
+  id           Int          @id @default(autoincrement())
+  transaction  Transactions @relation(fields: [tx_id], references: [id])
+  tx_id        Int
   product_name String
-  price Int
-  quantity Int @default(0)
-  total_price Int
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  price        Int
+  quantity     Int          @default(0)
+  total_price  Int
+  created_at   DateTime     @default(now())
+  updated_at   DateTime     @updatedAt
 
   @@index([tx_id])
 }
 
 model Services {
-  id Int @id @default(autoincrement())
-  date DateTime @unique
-  technician Admins? @relation(fields: [technician_id], references: [id])
-  technician_id Int?
-  user Users @relation(fields: [user_id], references: [id])
-  user_id Int
-  status Int @default(1)
-  price Int?
-  wa_user String?
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id             Int            @id @default(autoincrement())
+  date           DateTime       @unique
+  technician     Admins?        @relation(fields: [technician_id], references: [id])
+  technician_id  Int?
+  user           Users          @relation(fields: [user_id], references: [id])
+  user_id        Int
+  service_status Service_Status @relation(fields: [status_id], references: [id])
+  status_id      Int            @default(1)
+  price          Int?
+  wa_user        String?
+  created_at     DateTime       @default(now())
+  updated_at     DateTime       @updatedAt
 
   @@index([technician_id])
   @@index([user_id])
+  @@index([status_id])
 }
 
 model Service_Status {
-  id Int @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   status_name String
+  Services    Services[]
+}
+
+model Transaksi_Status {
+  id           Int            @id @default(autoincrement())
+  status       String
+  Transactions Transactions[]
 }
