@@ -54,6 +54,8 @@ model Cart {
   id_barang Int
   quantity Int
   price Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   @@index([id_user])
   @@index([id_barang])
