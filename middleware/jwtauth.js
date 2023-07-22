@@ -15,9 +15,9 @@ const verifyToken = async (req,res,next) => {
 
 const auth = (roles) => async(req,res,next) => {
     try {
-        const authHeader = req.headers['autorization'];
+        const authHeader = req.headers['authorization'];
         const token = authHeader && authHeader.split(' ')[1];
-        if(token == null) return res.sendStatus(401);
+        if(token == null) return res.status(401).json({message:"no token"});
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err,decode)=>{
             if(err) return res.sendStatus(403);
             if(!roles.includes(decode.role)) return res.status(401).json({message:"Unauthorized"})
@@ -25,7 +25,7 @@ const auth = (roles) => async(req,res,next) => {
             next();
         })
     } catch (e) {
-        res.sendStatus(401);
+        res.status(401).json({message:"catch"});
     }
 }
 
