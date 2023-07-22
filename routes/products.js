@@ -2,32 +2,8 @@ var express = require('express');
 var router = express.Router();
 const fs = require('node:fs/promises')
 const Validator = require('fastest-validator');
-const { Prisma, PrismaClient } = require('@prisma/client')
-const multer = require('multer');
-const path = require('path')
-
-const productStorage = multer.diskStorage({
-    destination: (req,file,cb)=> {
-        cb(null, './public/images')
-    },
-    filename: (req,file,cb)=>{
-        cb(null, `produk-${Math.floor(Math.random()*1000)}${new Date().getTime()}`+path.extname(file.originalname))
-    }
-});
-
-const productFilter = (req, file, cb) => {
-    if (!file.originalname.match(/\.(png|jpg)$/)){
-        return cb(new Error('Please upload a Image'))
-    }
-    cb(null, true)
-};
-
-exports.upload = multer({
-    storage: productStorage,
-    fileFilter: productFilter
-});
-
-
+const mtr = require('../middleware/upload')
+const { Prisma, PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient()
 const v = new Validator();
@@ -48,13 +24,13 @@ router.get('/:id', async (req,res)=> {
     }
 })
 
-router.post('/single', this.upload.single('img'), async (req,res) => {
+router.post('/single', mtr.upload.single('img') , async (req,res) => {
     if(!req.file) return res.status(400).json({message:"please upload the image"});
     const filename = req.file.filename
     res.json({filename:filename})
 })
 
-router.post('/', this.upload.single('img'), async (req,res)=>{
+router.post('/', mtr.upload.single('img'), async (req,res)=>{
     // const schema = {
     //     nama : 'string|required',
     //     harga: 'required',
