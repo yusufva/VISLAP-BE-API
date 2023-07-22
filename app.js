@@ -12,6 +12,7 @@ var kategoriRouter = require('./routes/kategori');
 var productRouter = require('./routes/products');
 var refreshTokenRouter = require('./routes/refreshToken');
 var transactionRouter = require('./routes/transaction');
+var cartRouter = require('./routes/cart');
 
 var app = express();
 
@@ -31,5 +32,6 @@ app.use('/admins', adminsRouter); //login admin
 app.use('/category', kategoriRouter); //category product
 app.use('/products', productRouter); //products
 app.use('/txs', transactionRouter); //transactions
+app.use('/cart', cartRouter); //cart
 
 module.exports = app;
