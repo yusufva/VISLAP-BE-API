@@ -62,7 +62,7 @@ router.post('/', mtr.upload.single('img'), async (req,res)=>{
     res.json(product)
 })
 
-router.put('/:id', this.upload.single('img'), async (req,res)=>{
+router.put('/:id', mtr.upload.single('img'), async (req,res)=>{
     const schema = {
         nama : 'string|required',
         harga: 'required',
