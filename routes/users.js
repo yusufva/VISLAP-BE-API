@@ -55,7 +55,7 @@ router.post('/login', async (req,res)=>{
     const name = user.name
     const role = user.role;
     const accessToken = jwt.sign({userId, name, role}, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '60s' });
-    const refreshToken = jwt.sign({userId, name, role}, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d'});
+    const refreshToken = jwt.sign({userId, name, role}, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '3d'});
     await prisma.users.update({
       data: { refresh_token: refreshToken },
       where: { id:userId }
