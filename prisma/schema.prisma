@@ -41,8 +41,22 @@ model Users {
   refresh_token String?        @db.Text
   transactions  Transactions[]
   services      Services[]
+  cart Cart[]
   created_at    DateTime       @default(now())
   updated_at    DateTime       @updatedAt
+}
+
+model Cart {
+  id Int @id @default(autoincrement())
+  user Users @relation(fields: [id_user], references: [id])
+  id_user Int
+  barang Products @relation(fields: [id_barang], references: [id])
+  id_barang Int
+  quantity Int
+  price Int
+
+  @@index([id_user])
+  @@index([id_barang])
 }
 
 model Products {
@@ -52,6 +66,7 @@ model Products {
   kategori   String?
   photo      String?
   stock      Int?
+  carts Cart[]
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
