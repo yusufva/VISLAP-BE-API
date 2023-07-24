@@ -140,7 +140,7 @@ router.put('/:id', jwt.verifyToken, jwt.auth([2]), async (req,res) => {
     }
 })
 
-router.put('/technician/:id', jwt.verifyToken, jwt.auth([3]), async (req,res) => {
+router.put('/technician/:id', jwt.verifyToken, jwt.auth([3]), async (req,res,next) => {
     try {
         const id = parseInt(req.params.id)
         let service = await prisma.services.findUnique({where:{id:id}})
@@ -178,3 +178,5 @@ router.delete('/:id', jwt.verifyToken, jwt.auth([1]), async (req,res) => {
         return res.status(400).json({message:"id must be a number"})
     }
 })
+
+module.exports = router;
