@@ -122,6 +122,9 @@ model Services {
   status_id      Int            @default(1)
   price          Int?
   wa_user        String?
+  message1 String @db.Text
+  message2 String? @db.Text
+  message3 String? @db.Text
   created_at     DateTime       @default(now())
   updated_at     DateTime       @updatedAt
 
