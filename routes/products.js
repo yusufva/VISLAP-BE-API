@@ -63,18 +63,18 @@ router.post('/', mtr.upload.single('img'), async (req,res)=>{
 })
 
 router.put('/:id', mtr.upload.single('img'), async (req,res)=>{
-    const schema = {
-        nama : 'string|required',
-        harga: 'required',
-        kategori: 'string|required',
-        stock: 'required',
-    }
-    const validate = v.validate(req.body, schema);
-    if (validate.length) {
-        return res
-        .status(400)
-        .json(validate);
-    }
+    // const schema = {
+    //     nama : 'string|required',
+    //     harga: 'required',
+    //     kategori: 'string|required',
+    //     stock: 'required',
+    // }
+    // const validate = v.validate(req.body, schema);
+    // if (validate.length) {
+    //     return res
+    //     .status(400)
+    //     .json(validate);
+    // }
 
     if(!req.file) {
         try {
