@@ -17,7 +17,7 @@ var servicesRouter = require('./routes/service');
 
 var app = express();
 
-app.use(cors({credentials:true}))
+app.use(cors({origin:'*', credentials:true}))
 
 app.use(logger('dev'));
 app.use(express.json());
