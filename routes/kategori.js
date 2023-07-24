@@ -33,7 +33,7 @@ router.post('/', async (req,res) => {
     };
 
     const kategori = await prisma.kategori.create({data:req.body});
-    res.json(kategori);
+    res.status(201).json(kategori);
 })
 
 router.put('/:id', async (req,res) => {
