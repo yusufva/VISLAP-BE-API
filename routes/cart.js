@@ -14,7 +14,6 @@ router.get('/', jwt.verifyToken, jwt.auth([4]), async (req,res) => {
 
 router.post('/', jwt.verifyToken, jwt.auth([4]), async (req,res) => {
     const schema = {
-        id_user : 'number|required',
         id_barang: 'number|required',
         quantity: 'number|required',
         price: 'number|required',
