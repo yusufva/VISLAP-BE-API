@@ -61,7 +61,7 @@ router.put('/:id', async (req,res) => {
     }
 })
 
-router.delete('/', async (req,res) => {
+router.delete('/:id', async (req,res) => {
     try {
         const id = parseInt(req.params.id);
         let kategori = await prisma.kategori.findUnique({where:{id:id}});
