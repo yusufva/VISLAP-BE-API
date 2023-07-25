@@ -52,7 +52,7 @@ router.get('/technician', jwt.verifyToken, jwt.auth([3]), async (req,res) => {
     res.json(service)
 })
 
-router.get('/:id', jwt.verifyToken, jwt.auth([2]), async (req,res) => {
+router.get('/:id', jwt.verifyToken, jwt.auth([2,3]), async (req,res) => {
     try {
         const id = req.params.id;
         const service = await prisma.services.findUnique({
@@ -149,7 +149,7 @@ router.put('/technician/:id', jwt.verifyToken, jwt.auth([3]), async (req,res,nex
         const schema = {
             message2 : 'string',
             message3 : 'string',
-            service_status: 'number'
+            status_id: 'number'
         }
         const validate = v.validate(req.body, schema);
         if (validate.length) {
