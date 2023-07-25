@@ -512,3 +512,15 @@ Install vislap-project with npm
 | :-------- | :------- | :--------------------------------------- |
 | `id`      | `string` | **Required**. Id of Service to fetch     |
 
+
+## Images API Reference
+
+#### Get Images
+
+```http
+  GET /images/${filename}
+```
+
+| Parameter       | Type     | Description                   |
+| :-------------- | :------- | :---------------------------- |
+| `filename`      | `string` | **Required**. images filename |
