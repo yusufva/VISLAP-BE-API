@@ -45,6 +45,12 @@ router.post('/registers', async (req,res)=>{
     })
 
     router.post('/login', async (req,res)=>{
+        const schema = {
+            email: 'email',
+            password: 'string'
+        }
+        const validate = v.validate(req.body, schema);
+        if (validate.length) return res.status(400).json(validate);
     try {
         const user = await prisma.admins.findFirstOrThrow({where: { email: req.body.email }});
         const isValid = await bcrypt.compare(req.body.password, user.password);
