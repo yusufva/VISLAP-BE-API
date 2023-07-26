@@ -53,13 +53,13 @@ router.post('/registers', async (req,res)=>{
         const name = user.name
         const role = user.role;
         const accessToken = jwt.sign({userId, name, role}, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '60s' });
-        const refreshToken = jwt.sign({userId, name, role}, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d'});
+        const refreshToken = jwt.sign({userId, name, role}, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '3d'});
         await prisma.admins.update({
         data: { refresh_token: refreshToken },
         where: { id:userId }
         });
         res.cookie('refreshToken', refreshToken,{
-        httpOnly: true,
+        httpOnly: false,
         maxAge: 72*60*60*1000,
         secure: true //comment this line for localhost
         });
