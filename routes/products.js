@@ -92,7 +92,8 @@ router.put('/:id', mtr.upload.single('img'), async (req,res)=>{
                     harga:intHarga,
                     kategori: kategori,
                     stock: intStock,
-                }
+                },
+                where:{id:id}
             })
         
             return res.json(product)
@@ -116,7 +117,8 @@ router.put('/:id', mtr.upload.single('img'), async (req,res)=>{
                     kategori: kategori,
                     photo: req.file.filename,
                     stock: intStock,
-                }
+                },
+                where:{id:id}
             })
         
             return res.json(product)
