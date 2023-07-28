@@ -89,7 +89,7 @@ router.put('/:id', async (req,res) => {
             .json(validate);
         };
 
-        tx = await prisma.transactions.update({where:{id:id}, data:req.body, include:{items:true}})
+        tx = await prisma.transactions.update({where:{id:id}, data:req.body})
         return res.json(tx)
     } catch (e) {
         
