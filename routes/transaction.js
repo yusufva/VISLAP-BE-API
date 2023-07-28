@@ -80,7 +80,7 @@ router.put('/:id', async (req,res) => {
         if (!tx) return res.status(404).json({message:"transaction not found"})
 
         const schema = {
-            status: "number|required"
+            status_id: "number|required"
         }
         const validate = v.validate(req.body, schema);
         if (validate.length) {
@@ -89,7 +89,7 @@ router.put('/:id', async (req,res) => {
             .json(validate);
         };
 
-        tx = await prisma.transactions.update({where:{id:id}, data:{status:req.body.status}})
+        tx = await prisma.transactions.update({where:{id:id}, data:{status_id:req.body.status}})
         return res.json(tx)
     } catch (e) {
         return console.log(e)
