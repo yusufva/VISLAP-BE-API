@@ -342,9 +342,9 @@ Install vislap-project with npm
 | :------------------- | :------ | :------------------------------- |
 | `Authorization`      | `Token` | **Required**. Admin Bearer Token |
 
-| Body         | Type          | Description                       |
-| :----------- | :------------ | :-------------------------------  |
-| `status`     | `int`         | **Required**. Transaction status  |
+| Body            | Type          | Description                       |
+| :-------------- | :------------ | :-------------------------------  |
+| `status_id`     | `int`         | **Required**. Transaction status  |
 
 #### Delete Transaction
 
