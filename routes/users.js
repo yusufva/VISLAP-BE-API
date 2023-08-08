@@ -67,9 +67,9 @@ router.post('/login', async (req,res)=>{
       where: { id:userId }
     });
     res.cookie('refreshToken', refreshToken,{
-      httpOnly: true,
+      httpOnly: false,
       maxAge: 72*60*60*1000,
-      secure: false, //comment this line for localhost
+      secure: true, //comment this line for localhost
       sameSite: 'Lax'
     });
     res.json({
