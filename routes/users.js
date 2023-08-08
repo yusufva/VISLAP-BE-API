@@ -70,7 +70,7 @@ router.post('/login', async (req,res)=>{
       httpOnly: false,
       maxAge: 72*60*60*1000,
       secure: true, //comment this line for localhost
-      sameSite: 'Lax'
+      sameSite: false
     });
     res.json({
       message : "user successfully loged in",
