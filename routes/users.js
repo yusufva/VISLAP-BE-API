@@ -74,7 +74,8 @@ router.post('/login', async (req,res)=>{
     });
     res.json({
       message : "user successfully loged in",
-      access_token : accessToken
+      access_token : accessToken,
+      refreshToken: refreshToken
     })
   } catch (e) {
     res.status(404).json({ message:"email not found" })
