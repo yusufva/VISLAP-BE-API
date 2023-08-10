@@ -12,7 +12,7 @@ const productStorage = multer.diskStorage({
 });
 
 const productFilter = (req, file, cb) => {
-    if (!file.originalname.match(/\.(png|jpg)$/)){
+    if (!file.originalname.match(/\.(png|jpg|jpeg|webp)$/)){
         return cb(new Error('Please upload a Image'))
     }
     cb(null, true)
