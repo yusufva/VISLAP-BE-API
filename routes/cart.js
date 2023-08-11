@@ -8,7 +8,12 @@ const prisma = new PrismaClient();
 const v = new Validator();
 
 router.get('/', jwt.verifyToken, jwt.auth([4]), async (req,res) => {
-    const cart = await prisma.cart.findMany({where:{id_user:req.id}})
+    const cart = await prisma.cart.findMany({
+        where:{id_user:req.id},
+        include: {
+            barang: true
+        }
+    })
     res.json(cart)
 })
 
