@@ -35,7 +35,8 @@ router.post('/', jwt.verifyToken, jwt.auth([4]), async (req,res) => {
             id_user: req.id,
             id_barang: req.body.id_barang,
             quantity: req.body.quantity,
-            price: req.body.price
+            price: req.body.price,
+            total_price: req.body.price*req.body.quantity
         }
     })
     res.json(cart)
