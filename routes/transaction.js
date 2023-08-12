@@ -43,7 +43,8 @@ router.post('/', async (req,res) => {
             product_name: "string|required",
             price: "number|required",
             quantity: "number|required",
-            total_price: "number|required"
+            total_price: "number|required",
+            unique_code: "number|required"
         }}},
         final_price: "number|required"
     };
@@ -58,6 +59,7 @@ router.post('/', async (req,res) => {
         data: {
             user_id: req.body.user_id,
             final_price: req.body.final_price,
+            unique_code: req.body.unique_code,
             items:{
                 createMany: {
                     data: req.body.items
