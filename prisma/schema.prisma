@@ -54,6 +54,7 @@ model Cart {
   id_barang Int
   quantity Int
   price Int
+  total_price Int @default(0)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -87,6 +88,7 @@ model Transactions {
   user_id     Int
   items       Items[]
   final_price Int
+  unique_code Int              @default(0)
   status      Transaksi_Status @relation(fields: [status_id], references: [id])
   status_id   Int              @default(1)
   expiration  DateTime?
