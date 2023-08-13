@@ -99,7 +99,7 @@ router.put('/:id', jwt.verifyToken, jwt.auth([2]), async (req,res) => {
         }
 
         tx.items.map( (Item) =>{
-            produk = prisma.products.findUnique({where:{nama:Item.product_name}})
+            produk = prisma.products.findFirst({where:{nama:Item.product_name}})
             return prisma.products.update({where:{id:produk.id}, data:{stock:produk.stock-Item.quantity}})
         })
 
