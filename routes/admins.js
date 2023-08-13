@@ -24,7 +24,10 @@ router.get('/', jwtm.verifyToken, jwtm.auth([1,2]), async (req,res)=>{
             role:role
         },
         select:{
-            refresh_token:false
+            id:true,
+            email:true,
+            name:true,
+            role:true,
         }
     });
     res.json(admins)
