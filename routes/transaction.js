@@ -72,6 +72,7 @@ router.post('/', jwt.verifyToken, async (req,res) => {
             items:true
         }
     });
+    await prisma.cart.delete({where:{id_user:req.id}});
 
     res.status(201).json(tx);
 })
