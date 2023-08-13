@@ -93,20 +93,21 @@ router.put('/:id', jwt.verifyToken, jwt.auth([2]), async (req,res) => {
             .json(validate);
         };
 
-        if(req.body.status_id != 4){
+        if(req.body.status_id == 4){
+            
+            for (let i in tx.items){
+                let produk = await prisma.products.findUnique({where:{nama:tx.items[i]}})
+                produk = await prisma.products.update({where:{id:produk.id}, data:{stock:produk.stock - tx.items[i].quantity}})
+            }
             tx = await prisma.transactions.update({where:{id:id}, data:req.body, include:{items:true}})
             return res.json(tx)
         }
 
-        tx.items.map( (Item) =>{
-            produk = prisma.products.findFirst({where:{nama:Item.product_name}})
-            return prisma.products.update({where:{id:produk.id}, data:{stock:produk.stock-Item.quantity}})
-        })
+        // tx.items.map( (Item) =>{
+        //     produk = prisma.products.findFirst({where:{nama:Item.product_name}})
+        //     return prisma.products.update({where:{id:produk.id}, data:{stock:produk.stock-Item.quantity}})
+        // })
 
-        // for (let i in tx.items){
-        //     let produk = await prisma.products.findUnique({where:{nama:tx.items[i]}})
-        //     produk = await prisma.products.update({where:{id:produk.id}, data:{stock:produk.stock - tx.items[i].quantity}})
-        // }
         tx = await prisma.transactions.update({where:{id:id}, data:req.body, include:{items:true}})
         return res.json(tx)
     } catch (e) {
