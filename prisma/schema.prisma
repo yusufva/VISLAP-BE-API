@@ -115,7 +115,7 @@ model Items {
 
 model Services {
   id             Int            @id @default(autoincrement())
-  date           DateTime       @unique
+  date           DateTime       @unique @default(now())
   technician     Admins?        @relation(fields: [technician_id], references: [id])
   technician_id  Int?
   user           Users          @relation(fields: [user_id], references: [id])
