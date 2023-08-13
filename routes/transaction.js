@@ -43,10 +43,10 @@ router.post('/', async (req,res) => {
             product_name: "string|required",
             price: "number|required",
             quantity: "number|required",
-            total_price: "number|required",
-            unique_code: "number|required"
+            total_price: "number|required"
         }}},
-        final_price: "number|required"
+        final_price: "number|required",
+        unique_code: "number|required"
     };
     const validate = v.validate(req.body, schema);
     if (validate.length) {
