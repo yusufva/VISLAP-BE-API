@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
 const Validator = require('fastest-validator');
-const { Prisma, PrismaClient } = require('@prisma/client')
+const { Prisma, PrismaClient } = require('@prisma/client');
+const jwt = require('../middleware/jwtauth');
 
 const prisma = new PrismaClient()
 const v = new Validator();
@@ -36,7 +37,7 @@ router.get('/:id', async (req,res) => {
 
 })
 
-router.post('/', async (req,res) => {
+router.post('/', jwt.verifyToken, async (req,res) => {
     const schema = {
         user_id: "number|required",
         items: {type:"array", items:{ type: "object", props: {
@@ -75,10 +76,10 @@ router.post('/', async (req,res) => {
     res.status(201).json(tx);
 })
 
-router.put('/:id', async (req,res) => {
+router.put('/:id', jwt.verifyToken, jwt.auth[2], async (req,res) => {
     try {
         const id = parseInt(req.params.id);
-        let tx = await prisma.transactions.findUnique({where:{id:id}})
+        let tx = await prisma.transactions.findUnique({where:{id:id}, include:{items:true}})
         if (!tx) return res.status(404).json({message:"transaction not found"})
 
         const schema = {
@@ -91,7 +92,14 @@ router.put('/:id', async (req,res) => {
             .json(validate);
         };
 
-        tx = await prisma.transactions.update({where:{id:id}, data:req.body, include:{items:true}})
+        if(req.body.status_id != 4){
+            tx = await prisma.transactions.update({where:{id:id}, data:req.body, include:{items:true}})
+            return res.json(tx)
+        }
+        tx.items.map(async Item =>{
+            produk = await prisma.products.findUnique({where:{nama:Item.product_name}})
+            return await prisma.products.update({where:{id:produk.id}, data:{stock:produk.stock-Item.quantity}})
+        })
         return res.json(tx)
     } catch (e) {
         return console.log(e)
