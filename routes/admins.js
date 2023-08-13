@@ -2,14 +2,35 @@ var express = require('express');
 var router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const jwtm = require("../middleware/jwtauth")
 const {auth, verifyToken} = require('../middleware/jwtauth')
 const Validator = require('fastest-validator');
 const { Prisma, PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 const v = new Validator();
 
+router.get('/', jwtm.verifyToken, jwtm.auth([1,2]), async (req,res)=>{
+    switch (req.id) {
+        case 1:
+            role = 2
+            break;
+    
+        case 2:
+            role = 3
+            ;
+    }
+    const admins = await prisma.admins.findMany({
+        where:{
+            role:role
+        },
+        select:{
+            refresh_token:false
+        }
+    });
+    res.json(admins)
+})
 
-router.post('/registers', async (req,res)=>{
+router.post('/registers', jwtm.verifyToken, jwtm.auth([1,2]), async (req,res)=>{
     const schema = {
         name : 'string',
         email: 'email',
