@@ -96,7 +96,7 @@ router.put('/:id', jwt.verifyToken, jwt.auth([2]), async (req,res) => {
         if(req.body.status_id == 4){
             
             for (let i in tx.items){
-                let produk = await prisma.products.findUnique({where:{nama:tx.items[i]}})
+                let produk = await prisma.products.findFirst({where:{nama:tx.items[i]}})
                 produk = await prisma.products.update({where:{id:produk.id}, data:{stock:produk.stock - tx.items[i].quantity}})
             }
             tx = await prisma.transactions.update({where:{id:id}, data:req.body, include:{items:true}})
