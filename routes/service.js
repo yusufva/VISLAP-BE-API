@@ -139,22 +139,36 @@ router.post('/', jwt.verifyToken, jwt.auth([4]), async (req,res) => {
 })
 
 router.put('/:id', jwt.verifyToken, jwt.auth([2]), async (req,res) => {
-       const schema = {
-            technician_id : 'number|required',
-            status_id: 'number|required',
-        }
-        const validate = v.validate(req.body, schema);
-        if (validate.length) {
-            return res
-            .status(400)
-            .json(validate);
-        }
+    const schema = {
+        technician_id : 'number|required',
+        status_id: 'number|required',
+    }
+    const validate = v.validate(req.body, schema);
+    if (validate.length) {
+        return res
+        .status(400)
+        .json(validate);
+    }
     try {
- 
         const id = parseInt(req.params.id)
         let service = await prisma.services.findUnique({where:{id:id}})
         if (!service) return res.status(404).json({message:"services data not found"});
-        service = await prisma.services.update({data:req.body})
+        service = await prisma.services.update({
+            data:req.body,
+            include:{
+                service_status:{
+                    select:{
+                        id:true,
+                        status_name:true
+                    }
+                },
+                technician:{
+                    select:{
+                        name:true
+                    }
+                }
+            }
+        })
         return res.json({message:"services data has been updated"})
     } catch (e) {
         return res.status(400).json({message:"id must be a number"})
@@ -180,7 +194,22 @@ router.put('/technician/:id', jwt.verifyToken, jwt.auth([3]), async (req,res,nex
         }
 
         if (!service) return res.status(404).json({message:"services data not found"});
-        service = await prisma.services.update({data:req.body})
+        service = await prisma.services.update({
+            data:req.body,
+            include:{
+                service_status:{
+                    select:{
+                        id:true,
+                        status_name:true
+                    }
+                },
+                technician:{
+                    select:{
+                        name:true
+                    }
+                }
+            }
+        })
         return res.json({message:"services data has been updated"})
     } catch (e) {
         return res.status(400).json({message:"id must be a number"})
