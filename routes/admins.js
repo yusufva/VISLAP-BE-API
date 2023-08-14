@@ -10,12 +10,13 @@ const prisma = new PrismaClient()
 const v = new Validator();
 
 router.get('/', jwtm.verifyToken, jwtm.auth([1,2]), async (req,res)=>{
+    let role
     switch (req.id) {
-        case req.id == 1:
+        case 1:
             role = 2
             break;
     
-        case req.id == 2:
+        case 2:
             role = 3
             break;
     }
