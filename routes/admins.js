@@ -11,7 +11,7 @@ const v = new Validator();
 
 router.get('/', jwtm.verifyToken, jwtm.auth([1,2]), async (req,res)=>{
     let roleget
-    switch (req.id) {
+    switch (req.role) {
         case 1:
             roleget = 2
             break;
