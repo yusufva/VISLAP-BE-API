@@ -232,6 +232,11 @@ router.put('/technician/:id', jwt.verifyToken, jwt.auth([3]), async (req,res,nex
                     select:{
                         name:true
                     }
+                },
+                user:{
+                    select:{
+                        name:true
+                    }
                 }
             }
         })
