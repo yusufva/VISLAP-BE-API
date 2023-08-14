@@ -19,7 +19,12 @@ router.get('/user', jwt.verifyToken, jwt.auth([4]), async (req,res) => {
                 select:{
                     name:true
                 }
-            }
+            },
+                user:{
+                    select:{
+                        name:true
+                    }
+                }
         }, 
         where:{
             user_id:req.id
@@ -35,7 +40,12 @@ router.get('/admin', jwt.verifyToken, jwt.auth([2]), async (req,res) => {
                 select:{
                     status_name:true
                 }
-            }
+            },
+                user:{
+                    select:{
+                        name:true
+                    }
+                }
         }, 
     })
     res.json(service)
@@ -53,7 +63,12 @@ router.get('/technician', jwt.verifyToken, jwt.auth([3]), async (req,res) => {
                 select:{
                     name:true
                 }
-            }
+            },
+                user:{
+                    select:{
+                        name:true
+                    }
+                }
         }, 
         where:{
             technician_id:req.id
@@ -77,6 +92,11 @@ router.get('/:id', jwt.verifyToken, jwt.auth([2,3]), async (req,res) => {
                     }
                 },
                 technician:{
+                    select:{
+                        name:true
+                    }
+                },
+                user:{
                     select:{
                         name:true
                     }
@@ -104,6 +124,11 @@ router.get('/technician/:id', jwt.verifyToken, jwt.auth([3]), async (req,res) =>
                     }
                 },
                 technician:{
+                    select:{
+                        name:true
+                    }
+                },
+                user:{
                     select:{
                         name:true
                     }
