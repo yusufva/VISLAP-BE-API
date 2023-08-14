@@ -10,19 +10,19 @@ const prisma = new PrismaClient()
 const v = new Validator();
 
 router.get('/', jwtm.verifyToken, jwtm.auth([1,2]), async (req,res)=>{
-    let role
+    let roleget
     switch (req.id) {
         case 1:
-            role = 2
+            roleget = 2
             break;
     
         case 2:
-            role = 3
+            roleget = 3
             break;
     }
     const admins = await prisma.admins.findMany({
         where:{
-            role:role
+            role:roleget
         },
         select:{
             id:true,
