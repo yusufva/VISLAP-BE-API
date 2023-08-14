@@ -41,11 +41,11 @@ router.get('/admin', jwt.verifyToken, jwt.auth([2]), async (req,res) => {
                     status_name:true
                 }
             },
-                user:{
-                    select:{
-                        name:true
-                    }
+            user:{
+                select:{
+                    name:true
                 }
+            }
         }, 
     })
     res.json(service)
@@ -79,7 +79,7 @@ router.get('/technician', jwt.verifyToken, jwt.auth([3]), async (req,res) => {
 
 router.get('/:id', jwt.verifyToken, jwt.auth([2,3]), async (req,res) => {
     try {
-        const id = req.params.id;
+        const id = parseInt(req.params.id);
         const service = await prisma.services.findUnique({
             where:{
                 id:id,
@@ -174,8 +174,8 @@ router.put('/:id', jwt.verifyToken, jwt.auth([2]), async (req,res) => {
         .status(400)
         .json(validate);
     }
-    try {
-        const id = parseInt(req.params.id)
+    // try {
+        const id = parseInt(req.params.id);
         let service = await prisma.services.findUnique({where:{id:id}})
         if (!service) return res.status(404).json({message:"services data not found"});
         service = await prisma.services.update({
@@ -192,12 +192,15 @@ router.put('/:id', jwt.verifyToken, jwt.auth([2]), async (req,res) => {
                         name:true
                     }
                 }
+            },
+            where:{
+                id:id
             }
         })
         return res.json({message:"services data has been updated"})
-    } catch (e) {
+    // } catch (e) {
         return res.status(400).json({message:"id must be a number"})
-    }
+    // }
 })
 
 router.put('/technician/:id', jwt.verifyToken, jwt.auth([3]), async (req,res,next) => {
@@ -238,6 +241,9 @@ router.put('/technician/:id', jwt.verifyToken, jwt.auth([3]), async (req,res,nex
                         name:true
                     }
                 }
+            },
+            where:{
+                id:id
             }
         })
         return res.json({message:"services data has been updated"})
