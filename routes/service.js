@@ -139,8 +139,7 @@ router.post('/', jwt.verifyToken, jwt.auth([4]), async (req,res) => {
 })
 
 router.put('/:id', jwt.verifyToken, jwt.auth([2]), async (req,res) => {
-    try {
-        const schema = {
+       const schema = {
             technician_id : 'number|required',
             status_id: 'number|required',
         }
@@ -150,6 +149,8 @@ router.put('/:id', jwt.verifyToken, jwt.auth([2]), async (req,res) => {
             .status(400)
             .json(validate);
         }
+    try {
+ 
         const id = parseInt(req.params.id)
         let service = await prisma.services.findUnique({where:{id:id}})
         if (!service) return res.status(404).json({message:"services data not found"});
