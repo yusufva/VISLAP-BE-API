@@ -174,7 +174,7 @@ router.put('/:id', jwt.verifyToken, jwt.auth([2]), async (req,res) => {
         .status(400)
         .json(validate);
     }
-    // try {
+    try {
         const id = parseInt(req.params.id);
         let service = await prisma.services.findUnique({where:{id:id}})
         if (!service) return res.status(404).json({message:"services data not found"});
@@ -197,10 +197,10 @@ router.put('/:id', jwt.verifyToken, jwt.auth([2]), async (req,res) => {
                 id:id
             }
         })
-        return res.json({message:"services data has been updated"})
-    // } catch (e) {
+        return res.json({message:"services data has been updated",data:service})
+    } catch (e) {
         return res.status(400).json({message:"id must be a number"})
-    // }
+    }
 })
 
 router.put('/technician/:id', jwt.verifyToken, jwt.auth([3]), async (req,res,next) => {
@@ -246,7 +246,7 @@ router.put('/technician/:id', jwt.verifyToken, jwt.auth([3]), async (req,res,nex
                 id:id
             }
         })
-        return res.json({message:"services data has been updated"})
+        return res.json([{message:"services data has been updated", data:[service]}])
     } catch (e) {
         return res.status(400).json({message:"id must be a number"})
     }
