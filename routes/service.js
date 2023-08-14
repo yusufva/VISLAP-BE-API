@@ -14,6 +14,11 @@ router.get('/user', jwt.verifyToken, jwt.auth([4]), async (req,res) => {
                 select:{
                     status_name:true
                 }
+            },
+            technician:{
+                select:{
+                    name:true
+                }
             }
         }, 
         where:{
@@ -43,6 +48,11 @@ router.get('/technician', jwt.verifyToken, jwt.auth([3]), async (req,res) => {
                 select:{
                     status_name:true
                 }
+            },
+            technician:{
+                select:{
+                    name:true
+                }
             }
         }, 
         where:{
@@ -65,6 +75,11 @@ router.get('/:id', jwt.verifyToken, jwt.auth([2,3]), async (req,res) => {
                         id:true,
                         status_name:true
                     }
+                },
+                technician:{
+                    select:{
+                        name:true
+                    }
                 }
             }
         });
@@ -86,6 +101,11 @@ router.get('/technician/:id', jwt.verifyToken, jwt.auth([3]), async (req,res) =>
                     select:{
                         id:true,
                         status_name:true
+                    }
+                },
+                technician:{
+                    select:{
+                        name:true
                     }
                 }
             }
