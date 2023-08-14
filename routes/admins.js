@@ -11,11 +11,11 @@ const v = new Validator();
 
 router.get('/', jwtm.verifyToken, jwtm.auth([1,2]), async (req,res)=>{
     switch (req.id) {
-        case 1:
+        case req.id == 1:
             role = 2
             break;
     
-        case 2:
+        case req.id == 2:
             role = 3
             ;
     }
