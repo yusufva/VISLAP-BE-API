@@ -17,7 +17,7 @@ router.get('/', jwtm.verifyToken, jwtm.auth([1,2]), async (req,res)=>{
     
         case req.id == 2:
             role = 3
-            ;
+            break;
     }
     const admins = await prisma.admins.findMany({
         where:{
