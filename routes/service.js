@@ -45,6 +45,11 @@ router.get('/admin', jwt.verifyToken, jwt.auth([2]), async (req,res) => {
                 select:{
                     name:true
                 }
+            },
+            technician:{
+                select:{
+                    name:true
+                }
             }
         }, 
     })
