@@ -30,20 +30,7 @@ router.post('/single', mtr.upload.single('img') , async (req,res) => {
     res.json({filename:filename})
 })
 
-router.post('/', mtr.upload.single('img'), async (req,res)=>{
-    // const schema = {
-    //     nama : 'string|required',
-    //     harga: 'required',
-    //     kategori: 'string|required',
-    //     stock: 'required',
-    // }
-    // const validate = v.validate(req.body, schema);
-    // if (validate.length) {
-    //     return res
-    //     .status(400)
-    //     .json(validate);
-    // }
-
+router.post('/', jwt.verifyToken, jwt.auth([2]), mtr.upload.single('img'), async (req,res)=>{
     if(!req.file) return res.status(400).json({message:"please upload the image"});
 
     const {nama, harga, kategori, stock} = req.body;
@@ -62,20 +49,7 @@ router.post('/', mtr.upload.single('img'), async (req,res)=>{
     res.json(product)
 })
 
-router.put('/:id', mtr.upload.single('img'), async (req,res)=>{
-    // const schema = {
-    //     nama : 'string|required',
-    //     harga: 'required',
-    //     kategori: 'string|required',
-    //     stock: 'required',
-    // }
-    // const validate = v.validate(req.body, schema);
-    // if (validate.length) {
-    //     return res
-    //     .status(400)
-    //     .json(validate);
-    // }
-
+router.put('/:id', jwt.verifyToken, jwt.auth([2]), mtr.upload.single('img'), async (req,res)=>{
     if(!req.file) {
         try {
             const id = parseInt(req.params.id);
@@ -128,7 +102,7 @@ router.put('/:id', mtr.upload.single('img'), async (req,res)=>{
     }
 })
 
-router.delete('/:id', async (req,res)=>{
+router.delete('/:id', jwt.verifyToken, jwt.auth([2]), async (req,res)=>{
     const param = req.params.id;
     try {
         const id = parseInt(param);
