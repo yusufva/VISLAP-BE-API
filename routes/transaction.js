@@ -7,7 +7,23 @@ const jwt = require('../middleware/jwtauth');
 const prisma = new PrismaClient()
 const v = new Validator();
 
-router.get('/', async (req,res) => {
+router.get('/', jwt.verifyToken, jwt.auth([2,4]), async (req,res) => {
+    if(req.role !=2 ){
+        const tx = await prisma.transactions.findMany({
+            include:{
+                items:true,
+                status:{
+                    select:{
+                        status:true
+                    }
+                }
+            },
+            where:{
+                user_id:req.id
+            }
+        })
+        return res.json(tx)
+    }
     const tx = await prisma.transactions.findMany({
         include:{
             items:true,
@@ -17,10 +33,10 @@ router.get('/', async (req,res) => {
                 }
             }
         }})
-    res.json(tx)
+    return res.json(tx)
 })
 
-router.get('/:id', async (req,res) => {
+router.get('/:id', jwt.verifyToken, jwt.auth([2,4]), async (req,res) => {
     try {
         const id = parseInt(req.params.id);
         const tx = await prisma.transactions.findUnique({
@@ -37,7 +53,7 @@ router.get('/:id', async (req,res) => {
 
 })
 
-router.post('/', jwt.verifyToken, async (req,res) => {
+router.post('/', jwt.verifyToken, jwt.auth([4]), async (req,res) => {
     const schema = {
         user_id: "number|required",
         items: {type:"array", items:{ type: "object", props: {
@@ -109,7 +125,7 @@ router.put('/:id', jwt.verifyToken, jwt.auth([2]), async (req,res) => {
     }
 })
 
-router.delete('/:id', async (req,res) => {
+router.delete('/:id', jwt.verifyToken, jwt.auth([1]), async (req,res) => {
     try {
         const id = parseInt(req.params.id);
         let tx = await prisma.transactions.findUnique({where:{id:id}})
