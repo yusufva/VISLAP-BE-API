@@ -1,17 +1,18 @@
 var express = require('express');
 var router = express.Router();
 const Validator = require('fastest-validator');
-const { Prisma, PrismaClient } = require('@prisma/client')
+const { Prisma, PrismaClient } = require('@prisma/client');
+const jwt = require('../middleware/jwtauth');
 
 const prisma = new PrismaClient()
 const v = new Validator();
 
-router.get('/', async (req,res) => {
+router.get('/', jwt.verifyToken, async (req,res) => {
     const kategori = await prisma.kategori.findMany()
     res.json(kategori||{})
 })
 
-router.get('/:id', async (req,res) => {
+router.get('/:id', jwt.verifyToken, jwt.auth([2]), async (req,res) => {
     try {
         const id = parseInt(req.params.id);
         const kategori = await prisma.kategori.findUnique({where:{id:id}});
@@ -21,7 +22,7 @@ router.get('/:id', async (req,res) => {
     }
 })
 
-router.post('/', async (req,res) => {
+router.post('/', jwt.verifyToken, jwt.auth([2]), async (req,res) => {
     const schema = {
         name : 'string|required',
     };
@@ -36,7 +37,7 @@ router.post('/', async (req,res) => {
     res.status(201).json(kategori);
 })
 
-router.put('/:id', async (req,res) => {
+router.put('/:id', jwt.verifyToken, jwt.auth([2]), async (req,res) => {
     try {
         const id = parseInt(req.params.id);
         let kategori = await prisma.kategori.findUnique({where:{id:id}});
@@ -61,7 +62,7 @@ router.put('/:id', async (req,res) => {
     }
 })
 
-router.delete('/:id', async (req,res) => {
+router.delete('/:id', jwt.verifyToken, jwt.auth([2]), async (req,res) => {
     try {
         const id = parseInt(req.params.id);
         let kategori = await prisma.kategori.findUnique({where:{id:id}});
