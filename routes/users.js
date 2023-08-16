@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const {auth, verifyToken} = require('../middleware/jwtauth')
+const jwtm = require('../middleware/jwtauth')
 const Validator = require('fastest-validator');
 const { Prisma, PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
@@ -82,7 +82,7 @@ router.post('/login', async (req,res)=>{
   }
 })
 
-router.get('/profile', verifyToken, async(req,res)=>{
+router.get('/profile', jwtm.verifyToken, jwtm.auth([4]), async(req,res)=>{
   const id = req.id
   // return res.json(id)
   try {
@@ -102,19 +102,21 @@ router.get('/profile', verifyToken, async(req,res)=>{
   
 })
 
-router.put("/profile/:id", async(req,res)=>{
+router.put("/profile/:id", jwtm.verifyToken, jwtm.auth([4]), async(req,res)=>{
   const paramId = req.params.id
-  const schema = {
-    name : 'string',
-    alamat: 'email',
-    provinsi: 'string',
-    kota: 'string',
-    kecamatan : 'string'
-  }
-  const validate = v.validate(req.body, schema);
-  if (validate.length) return res.status(400).json(validate);
   try {
     const id = parseInt(paramId);
+    let profile = await prisma.users.findUnique({where:{id:id}})
+    jwtm.authId([profile.id])
+    const schema = {
+      name : 'string',
+      alamat: 'email',
+      provinsi: 'string',
+      kota: 'string',
+      kecamatan : 'string'
+    }
+    const validate = v.validate(req.body, schema);
+    if (validate.length) return res.status(400).json(validate);
     await prisma.users.update({ where:{ id:id }, data:req.body })
     return res.json({message:"user profile successfully updated"})
   } catch (e) {
