@@ -4,6 +4,7 @@ const fs = require('node:fs/promises')
 const Validator = require('fastest-validator');
 const mtr = require('../middleware/upload')
 const { Prisma, PrismaClient } = require('@prisma/client');
+const jwt = require('../middleware/jwtauth');
 
 const prisma = new PrismaClient()
 const v = new Validator();
