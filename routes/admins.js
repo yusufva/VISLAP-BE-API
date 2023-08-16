@@ -3,7 +3,6 @@ var router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const jwtm = require("../middleware/jwtauth")
-const {auth, verifyToken} = require('../middleware/jwtauth')
 const Validator = require('fastest-validator');
 const { Prisma, PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
@@ -104,7 +103,7 @@ router.post('/registers', jwtm.verifyToken, jwtm.auth([1,2]), async (req,res)=>{
     }
 })
 
-router.get('/profile', verifyToken, async(req,res)=>{
+router.get('/profile', jwtm.verifyToken, async(req,res)=>{
     const id = req.id
     // return res.json(id)
     try {
@@ -119,7 +118,7 @@ router.get('/profile', verifyToken, async(req,res)=>{
     }
 })
 
-router.put("/profile/:id", async(req,res)=>{
+router.put("/profile/:id", jwtm.verifyToken, jwtm.auth([1,2,3]), async(req,res)=>{
     const paramId = req.params.id
     const schema = {
         name : 'string',
@@ -136,7 +135,7 @@ router.put("/profile/:id", async(req,res)=>{
     }
 })
 
-router.delete('/logout', async(req,res)=>{
+router.delete('/logout', jwtm.verifyToken, jwtm.auth([1,2,3]), async(req,res)=>{
     const refreshToken = req.cookies.refreshToken;
     if(!refreshToken) return res.sendStatus(204);
     const user = await prisma.admins.findFirst({ where:{ refresh_token: refreshToken }});
