@@ -34,7 +34,7 @@ Install vislap-project with npm
 #### Users Register
 
 ```http
-  POST /users/register
+  POST /users/registers
 ```
 
 | Body               | Type     | Description                  |
@@ -99,7 +99,7 @@ Install vislap-project with npm
 #### Admins Register
 
 ```http
-  POST /admins/register
+  POST /admins/registers
 ```
 
 | Body               | Type     | Description                  |
