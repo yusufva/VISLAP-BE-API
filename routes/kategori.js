@@ -7,7 +7,7 @@ const jwt = require('../middleware/jwtauth');
 const prisma = new PrismaClient()
 const v = new Validator();
 
-router.get('/', jwt.verifyToken, async (req,res) => {
+router.get('/',  async (req,res) => {
     const kategori = await prisma.kategori.findMany()
     res.json(kategori||{})
 })
