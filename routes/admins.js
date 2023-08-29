@@ -122,7 +122,7 @@ router.put("/profile/:id", jwtm.verifyToken, jwtm.auth([1,2,3]), async(req,res)=
     const paramId = req.params.id
     const schema = {
         name : 'string',
-        alamat: 'email',
+        email: 'email',
     }
     const validate = v.validate(req.body, schema);
     if (validate.length) return res.status(400).json(validate);

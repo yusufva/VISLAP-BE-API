@@ -110,7 +110,7 @@ router.put("/profile/:id", jwtm.verifyToken, jwtm.auth([4]), async(req,res)=>{
     jwtm.authId([profile.id])
     const schema = {
       name : 'string',
-      alamat: 'email',
+      alamat: 'string',
       provinsi: 'string',
       kota: 'string',
       kecamatan : 'string'
