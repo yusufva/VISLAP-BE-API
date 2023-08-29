@@ -100,7 +100,8 @@ router.put('/:id', jwt.verifyToken, jwt.auth([2]), async (req,res) => {
         if (!tx) return res.status(404).json({message:"transaction not found"})
 
         const schema = {
-            status_id: "number|required"
+            status_id: "number|required",
+            resi: "string|optional"
         }
         const validate = v.validate(req.body, schema);
         if (validate.length) {
