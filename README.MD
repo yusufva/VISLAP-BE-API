@@ -108,6 +108,7 @@ Install vislap-project with npm
 | `email`            | `email`  | **Required**. admins email    |
 | `password`         | `string` | **Required**. admins password |
 | `confirm_password` | `string` | **Required**. confirm password |
+| `role`             | `number` | **Required**. role            |
 
 #### Get Admins Profile
 
