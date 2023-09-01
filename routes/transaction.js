@@ -62,8 +62,7 @@ router.post('/', jwt.verifyToken, jwt.auth([4]), async (req,res) => {
             quantity: "number|required",
             total_price: "number|required"
         }}},
-        final_price: "number|required",
-        unique_code: "number|required"
+        final_price: "number|required"
     };
     const validate = v.validate(req.body, schema);
     if (validate.length) {
@@ -76,7 +75,6 @@ router.post('/', jwt.verifyToken, jwt.auth([4]), async (req,res) => {
         data: {
             user_id: req.body.user_id,
             final_price: req.body.final_price,
-            unique_code: req.body.unique_code,
             items:{
                 createMany: {
                     data: req.body.items
