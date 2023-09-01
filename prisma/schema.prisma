@@ -38,6 +38,7 @@ model Users {
   provinsi      String?
   kota          String?
   kecamatan     String?
+  kode_pos      String?
   refresh_token String?        @db.Text
   transactions  Transactions[]
   services      Services[]
