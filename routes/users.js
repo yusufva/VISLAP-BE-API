@@ -95,6 +95,7 @@ router.get('/profile', jwtm.verifyToken, jwtm.auth([4]), async(req,res)=>{
       provinsi: true,
       kota: true,
       kecamatan: true,
+      kode_pos:true
     }})
     res.json(user)
   } catch (e) {
@@ -114,7 +115,8 @@ router.put("/profile/:id", jwtm.verifyToken, jwtm.auth([4]), async(req,res)=>{
       alamat: 'string',
       provinsi: 'string',
       kota: 'string',
-      kecamatan : 'string'
+      kecamatan : 'string',
+      kode_pos: 'number'
     }
     const validate = v.validate(req.body, schema);
     if (validate.length) return res.status(400).json(validate);
