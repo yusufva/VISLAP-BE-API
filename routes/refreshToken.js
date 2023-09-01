@@ -7,11 +7,11 @@ const prisma = new PrismaClient();
 router.get('/', async (req,res) => {
     try {
         const refreshToken = req.cookies.refreshToken;
-        if(!refreshToken) return res.sendStatus(401).json({message:"!refreshToken"});
+        if(!refreshToken) return res.sendStatus(401)
         const user = await prisma.users.findFirst({ where:{ refresh_token: refreshToken }});
-        if(!user) return res.sendStatus(403).json({message:"!user"});
+        if(!user) return res.sendStatus(403)
         jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decode)=>{
-            if(err) return res.sendStatus(403).json({message:"!verify"});
+            if(err) return res.sendStatus(403)
             const userId = user.id;
             const name = user.name;
             const role = user.role;
