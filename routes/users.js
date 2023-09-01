@@ -71,7 +71,7 @@ router.post('/login', async (req,res)=>{
       maxAge: 72*60*60*1000,
       secure: true, //comment this line for localhost
       sameSite: 'None',
-      domain: "http://localhost:3001"
+      domain: "vercel.app"
     });
     res.json({
       message : "user successfully loged in",
