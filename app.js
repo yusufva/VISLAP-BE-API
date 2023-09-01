@@ -17,7 +17,7 @@ var servicesRouter = require('./routes/service');
 
 var app = express();
 
-app.use(cors({origin:function (origin, callback) {callback(null, true)}, credentials:true, exposedHeaders:['set-cookie'], methods:'GET, PUT, POST, DELETE, HEAD, OPTIONS'}))
+app.use(cors({origin:function (origin, callback) {console.log(`Origin ${origin} is being granted CORS access`);callback(null, true)}, credentials:true, exposedHeaders:['set-cookie'], methods:'GET, PUT, POST, DELETE, HEAD, OPTIONS'}))
 
 app.use(logger('dev'));
 app.use(express.json());
