@@ -16,6 +16,17 @@ router.get('/', jwt.verifyToken, jwt.auth([2,4]), async (req,res) => {
                     select:{
                         status:true
                     }
+                },
+                user:{
+                    select:{
+                        name:true,
+                        email:true,
+                        alamat:true,
+                        provinsi:true,
+                        kota:true,
+                        kecamatan:true,
+                        kode_pos:true
+                    }
                 }
             },
             where:{
@@ -30,6 +41,17 @@ router.get('/', jwt.verifyToken, jwt.auth([2,4]), async (req,res) => {
             status:{
                 select:{
                     status:true
+                }
+            },
+            user:{
+                select:{
+                    name:true,
+                    email:true,
+                    alamat:true,
+                    provinsi:true,
+                    kota:true,
+                    kecamatan:true,
+                    kode_pos:true
                 }
             }
         }})
@@ -83,7 +105,18 @@ router.post('/', jwt.verifyToken, jwt.auth([4]), async (req,res) => {
             expiration: new Date(Date.now() + 24 * 60 * 60 * 1000)
         },
         include:{
-            items:true
+            items:true,
+            user:{
+                select:{
+                    name:true,
+                    email:true,
+                    alamat:true,
+                    provinsi:true,
+                    kota:true,
+                    kecamatan:true,
+                    kode_pos:true
+                }
+            }
         }
     });
     await prisma.cart.deleteMany({where:{id_user:req.id}});
@@ -91,7 +124,7 @@ router.post('/', jwt.verifyToken, jwt.auth([4]), async (req,res) => {
     res.status(201).json(tx);
 })
 
-router.put('/:id', jwt.verifyToken, jwt.auth([2]), async (req,res) => {
+router.put('/:id', jwt.verifyToken, jwt.auth([2,4]), async (req,res) => {
     try {
         const id = parseInt(req.params.id);
         let tx = await prisma.transactions.findUnique({where:{id:id}, include:{items:true}})
@@ -108,14 +141,14 @@ router.put('/:id', jwt.verifyToken, jwt.auth([2]), async (req,res) => {
             .json(validate);
         };
 
-        if(req.body.status_id == 4){
-            for (let i in tx.items){
-                let produk = await prisma.products.findFirst({where:{nama:tx.items[i].product_name}})
-                produk = await prisma.products.update({where:{id:produk.id}, data:{stock:produk.stock - tx.items[i].quantity}})
-            }
-            tx = await prisma.transactions.update({where:{id:id}, data:req.body, include:{items:true}})
-            return res.json(tx)
-        }
+        // if(req.body.status_id == 4){
+        //     for (let i in tx.items){
+        //         let produk = await prisma.products.findFirst({where:{nama:tx.items[i].product_name}})
+        //         produk = await prisma.products.update({where:{id:produk.id}, data:{stock:produk.stock - tx.items[i].quantity}})
+        //     }
+        //     tx = await prisma.transactions.update({where:{id:id}, data:req.body, include:{items:true}})
+        //     return res.json(tx)
+        // }
 
         tx = await prisma.transactions.update({where:{id:id}, data:req.body, include:{items:true}})
         return res.json(tx)
