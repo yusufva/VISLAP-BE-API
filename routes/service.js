@@ -82,7 +82,7 @@ router.get('/technician', jwt.verifyToken, jwt.auth([3]), async (req,res) => {
     res.json(service)
 })
 
-router.get('/:id', jwt.verifyToken, jwt.auth([2,3]), async (req,res) => {
+router.get('/:id', jwt.verifyToken, jwt.auth([2,3,4]), async (req,res) => {
     try {
         const id = parseInt(req.params.id);
         const service = await prisma.services.findUnique({
