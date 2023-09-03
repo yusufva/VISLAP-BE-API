@@ -65,6 +65,22 @@ router.get('/:id', jwt.verifyToken, jwt.auth([2,4]), async (req,res) => {
             where: {id:id},
             include:{
                 items: true,
+                status:{
+                    select:{
+                        status:true
+                    }
+                },
+                user:{
+                    select:{
+                        name:true,
+                        email:true,
+                        alamat:true,
+                        provinsi:true,
+                        kota:true,
+                        kecamatan:true,
+                        kode_pos:true
+                    }
+                }
             }
         });
     
