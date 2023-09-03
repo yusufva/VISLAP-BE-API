@@ -14,6 +14,7 @@ var refreshTokenRouter = require('./routes/refreshToken');
 var transactionRouter = require('./routes/transaction');
 var cartRouter = require('./routes/cart');
 var servicesRouter = require('./routes/service');
+var paymentRouter = require('./routes/midtrans');
 
 var app = express();
 
@@ -35,5 +36,6 @@ app.use('/products', productRouter); //products
 app.use('/txs', transactionRouter); //transactions
 app.use('/cart', cartRouter); //cart
 app.use('/services', servicesRouter); //services
+app.use('/payment', paymentRouter); //payment gateway
 
 module.exports = app;
