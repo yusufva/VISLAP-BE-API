@@ -99,56 +99,30 @@ router.post("/process-payment", jwt.verifyToken, async (req, res) => {
 
 router.post("/confirm-payment", async (req, res) => {
     try {
-        snap.transaction.notification(notificationJson)
-            .then(async (statusResponse) => {
-                const encrypt = sha512(statusResponse.order_id+statusResponse.status_code+statusResponse.gross_amount+config.serverKey)
-                if (encrypt != statusResponse.signature_key) return res.status(401).json({message:"signature key doesn't match"})
+        console.log(`Transaction notification recieved. Order ID: ${req.body.order_id}. Transaction status: ${req.body.transaction_status}. Fraud status: ${req.body.fraud_status}`)
+        const encrypt = sha512(req.body.order_id+req.body.status_code+req.body.gross_amount+config.serverKey)
+        if (encrypt != req.body.signature_key) return res.status(401).json({message:"signature key doesn't match"})
 
-                let order = statusResponse.order_id;
-                const orderId = order.split("-")
-                const id = parseInt(orderId[2]);
+        const order = req.body.order_id
+        const orderId = order.split("-")
+        const id = parseInt(orderId[2]);
+        let tx = await prisma.transactions.findUnique({where:{id:id}, include:{items:true}})
+        if (!tx) return res.status(404).json({message:"transaction not found"})
+        
+        const approved = ["capture", "settlement"]
+        if (approved.includes(req.body.transaction_status)){
+            tx = await prisma.transactions.update({where:{id:id}, data:{status_id:2}, include:{items:true}})
+            for (let i in tx.items){
+                let produk = await prisma.products.findFirst({where:{nama:tx.items[i].product_name}})
+                produk = await prisma.products.update({where:{id:produk.id}, data:{stock:produk.stock - tx.items[i].quantity}})
+            }
+            return res.sendStatus(200)
+        } else if(req.body.transaction_status === "pending"){
+            return res.sendStatus(200)
+        }
 
-                let transactionStatus = statusResponse.transaction_status;
-                let fraudStatus = statusResponse.fraud_status;
-
-                let tx = await prisma.transactions.findUnique({where:{id:id}, include:{items:true}})
-                if (!tx) return res.status(404).json({message:"transaction not found"})
-        
-                console.log(`Transaction notification received. Order ID: ${order}. Transaction status: ${transactionStatus}. Fraud status: ${fraudStatus}`);
-        
-                // Sample transactionStatus handling logic
-        
-                if (transactionStatus == 'capture'){
-                    if (fraudStatus == 'accept'){
-                        // TODO set transaction status on your database to 'success'
-                        // and response with 200 OK
-                        tx = await prisma.transactions.update({where:{id:id}, data:{status_id:2}, include:{items:true}})
-                        for (let i in tx.items){
-                            let produk = await prisma.products.findFirst({where:{nama:tx.items[i].product_name}})
-                            produk = await prisma.products.update({where:{id:produk.id}, data:{stock:produk.stock - tx.items[i].quantity}})
-                        }
-                        return res.sendStatus(200)
-                    }
-                } else if (transactionStatus == 'settlement'){
-                    // TODO set transaction status on your database to 'success'
-                    // and response with 200 OK
-                    tx = await prisma.transactions.update({where:{id:id}, data:{status_id:2}, include:{items:true}})
-                    for (let i in tx.items){
-                        let produk = await prisma.products.findFirst({where:{nama:tx.items[i].product_name}})
-                        produk = await prisma.products.update({where:{id:produk.id}, data:{stock:produk.stock - tx.items[i].quantity}})
-                    }
-                    return res.sendStatus(200)
-                } else if (transactionStatus == 'cancel' || transactionStatus == 'deny' || transactionStatus == 'expire'){
-                  // TODO set transaction status on your database to 'failure'
-                  // and response with 200 OK
-                    tx = await prisma.transactions.update({where:{id:id}, data:{status_id:5}, include:{items:true}})
-                    return res.sendStatus(200)
-                } else if (transactionStatus == 'pending'){
-                  // TODO set transaction status on your database to 'pending' / waiting payment
-                  // and response with 200 OK
-                    return res.sendStatus(200)
-                }
-        })
+        tx = await prisma.transactions.update({where:{id:id}, data:{status_id:5}, include:{items:true}})
+        return res.sendStatus(200)
 
     } catch (e) {
         return res.status(500).json({message:e.message})
