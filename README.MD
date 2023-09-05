@@ -71,6 +71,7 @@ Install vislap-project with npm
 | `provinsi`      | `string` | **Required**. users provinsi |
 | `kota`      | `string` | **Required**. users kota |
 | `kecamatan`      | `string` | **Required**. users kecamatan |
+| `kode_pos`      | `string` | **Required**. users kode_pos |
 
 #### Users Logout
 
@@ -308,6 +309,21 @@ Install vislap-project with npm
 | Parameter | Type    | Description                             |
 | :-------- | :------- | :------------------------------------- |
 | `id`      | `string` | **Required**. id for fetching Transaction |
+
+#### Get Transaction Date Range
+
+```http
+  POST /txs/range
+```
+
+| Header               | Type    | Description                      |
+| :------------------- | :------ | :------------------------------- |
+| `Authorization`      | `Token` | **Required**. Bearer Token       |
+
+| Parameter | Type    | Description                             |
+| :-------- | :------- | :------------------------------------- |
+| `start_date`      | `string` | **Required**. start_date for fetching Transaction ('YYYY-MM-dd') |
+| `end_date`      | `string` | **Required**. id for fetching Transaction ('YYYY-MM-dd') |
 
 #### Add Transaction
 
