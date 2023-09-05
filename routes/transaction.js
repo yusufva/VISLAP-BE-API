@@ -58,6 +58,83 @@ router.get('/', jwt.verifyToken, jwt.auth([2,4]), async (req,res) => {
     return res.json(tx)
 })
 
+router.post('/range', jwt.verifyToken, jwt.auth([2,4]), async (req,res) => {
+    const schema = {
+        start_date: "string|required",
+        end_date: "string|required"
+    };
+    const validate = v.validate(req.body, schema);
+    if (validate.length) {
+        return res
+        .status(400)
+        .json(validate);
+    };
+
+    const start_date = new Date(new Date(req.body.start_date).setUTCHours(0,0,0,0));
+    const end_date = new Date(new Date(req.body.end_date).setUTCHours(23,59,59,999));
+
+    if(req.role !=2 ){
+        const tx = await prisma.transactions.findMany({
+            include:{
+                items:true,
+                status:{
+                    select:{
+                        status:true
+                    }
+                },
+                user:{
+                    select:{
+                        name:true,
+                        email:true,
+                        alamat:true,
+                        provinsi:true,
+                        kota:true,
+                        kecamatan:true,
+                        kode_pos:true
+                    }
+                }
+            },
+            where:{
+                AND:{
+                    user_id:req.id,
+                    date:{
+                        gte: start_date,
+                        lte: end_date,
+                    }
+                }
+            }
+        })
+        return res.json(tx)
+    }
+    const tx = await prisma.transactions.findMany({
+        include:{
+            items:true,
+            status:{
+                select:{
+                    status:true
+                }
+            },
+            user:{
+                select:{
+                    name:true,
+                    email:true,
+                    alamat:true,
+                    provinsi:true,
+                    kota:true,
+                    kecamatan:true,
+                    kode_pos:true
+                }
+            }
+        },
+        where:{
+            date:{
+                gte: start_date,
+                lte: end_date,
+            }
+        }})
+    return res.json(tx)
+})
+
 router.get('/:id', jwt.verifyToken, jwt.auth([2,4]), async (req,res) => {
     try {
         const id = parseInt(req.params.id);
