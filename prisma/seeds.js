@@ -72,6 +72,9 @@ async function serv_status(){
         {
             status_name: "Cancelled"
         },
+        {
+            status_name: "Refund"
+        },
     ]
 
     for (let data of list){
