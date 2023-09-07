@@ -195,7 +195,7 @@ router.post('/', jwt.verifyToken, jwt.auth([4]), async (req,res) => {
                     data: req.body.items
                 }
             },
-            expiration: new Date(Date.now() + 24 * 60 * 60 * 1000)
+            expiration: new Date(Date.now() + 1 * 60 * 60 * 1000)
         },
         include:{
             items:true,
@@ -225,7 +225,8 @@ router.put('/:id', jwt.verifyToken, jwt.auth([2,4]), async (req,res) => {
 
         const schema = {
             status_id: "number|required",
-            resi: "string|optional"
+            resi: "string|optional",
+            payment_token: "string|optional"
         }
         const validate = v.validate(req.body, schema);
         if (validate.length) {
