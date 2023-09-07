@@ -83,18 +83,19 @@ model Kategori {
 }
 
 model Transactions {
-  id          Int              @id @default(autoincrement())
-  date        DateTime         @unique @default(now())
-  user        Users            @relation(fields: [user_id], references: [id])
-  user_id     Int
-  items       Items[]
-  final_price Int
-  status      Transaksi_Status @relation(fields: [status_id], references: [id])
-  status_id   Int              @default(1)
-  expiration  DateTime?
-  resi        String?
-  created_at  DateTime         @default(now())
-  updated_at  DateTime         @updatedAt
+  id            Int              @id @default(autoincrement())
+  date          DateTime         @unique @default(now())
+  user          Users            @relation(fields: [user_id], references: [id])
+  user_id       Int
+  items         Items[]
+  final_price   Int
+  status        Transaksi_Status @relation(fields: [status_id], references: [id])
+  status_id     Int              @default(1)
+  expiration    DateTime?
+  resi          String?
+  payment_token String?
+  created_at    DateTime         @default(now())
+  updated_at    DateTime         @updatedAt
 
   @@index([user_id])
   @@index([status_id])
