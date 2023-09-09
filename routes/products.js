@@ -107,6 +107,7 @@ router.delete('/:id', jwt.verifyToken, jwt.auth([2]), async (req,res)=>{
     const param = req.params.id;
     try {
         const id = parseInt(param);
+        if(id == 30) return res.json({message:"this product can't be deleted"})
         let product = await prisma.products.findUnique({where:{id:id}});
 
         if(!product) return res.status(404).json({message:"product not fount"});
