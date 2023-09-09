@@ -24,6 +24,7 @@ model Admins {
   role          Int
   refresh_token String?    @db.Text
   service       Services[]
+  status        Int        @default(1)
   created_at    DateTime   @default(now())
   updated_at    DateTime   @updatedAt
 }
@@ -40,6 +41,8 @@ model Users {
   kecamatan     String?
   kode_pos      Int?
   refresh_token String?        @db.Text
+  reset_question String        @default("")
+  reset_answer   String        @default("")
   transactions  Transactions[]
   services      Services[]
   cart Cart[]
