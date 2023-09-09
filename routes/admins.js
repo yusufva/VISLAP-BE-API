@@ -6,7 +6,12 @@ const jwtm = require("../middleware/jwtauth")
 const Validator = require('fastest-validator');
 const { Prisma, PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
-const v = new Validator();
+const v = new Validator({
+    useNewCustomCheckerFunction: true,
+    messages: {
+        notEqual: "{field} and {expected} can not be equal"
+    }
+});
 
 router.get('/', jwtm.verifyToken, jwtm.auth([1,2]), async (req,res)=>{
     let roleget
@@ -79,6 +84,7 @@ router.post('/registers', jwtm.verifyToken, jwtm.auth([1,2]), async (req,res)=>{
         const user = await prisma.admins.findFirstOrThrow({where: { email: req.body.email }});
         const isValid = await bcrypt.compare(req.body.password, user.password);
         if(!isValid) return res.status(400).json({ message: "wrong password" })
+        if(user.status==0) return res.status(403).json({message:"this user has been deactivated please contact admin"})
         const userId = user.id;
         const name = user.name
         const role = user.role;
@@ -144,6 +150,21 @@ router.delete('/logout', jwtm.verifyToken, jwtm.auth([1,2,3]), async(req,res)=>{
     await prisma.admins.update({data:{ refresh_token:null }, where:{ id:userId }});
     res.clearCookie('refreshToken');
     return res.status(200).json({message:"user successfully logged out"})
+})
+
+router.delete('/account/:id', jwtm.verifyToken, jwtm.auth([1,2]), async(req,res)=>{
+    try {
+        const id = parseInt(req.params.id);
+        let account = await prisma.admins.findUnique({where:{id:id}})
+    
+        if(!account) return res.status(404).json({message:"account not found"});
+        if (req.role >= account.role) return res.status(401).json({message:"you cannot delete this account"})
+
+        account = await prisma.admins.update({where:{id:id}, data:{status:0}})
+        return res.json({message:"account has been deactivated"})
+    } catch (e) {
+        return res.status(500).json({message:e.message})
+    }
 })
 
 module.exports = router;
