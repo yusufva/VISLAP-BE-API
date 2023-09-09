@@ -40,9 +40,11 @@ router.post("/process-payment", jwt.verifyToken, async (req, res) => {
             "customer_details": {
                 "first_name": `${req.body.user.name}`,
                 "email": `${req.body.user.email}`,
+                "phone": `${req.body.wa_user}`,
                 "shipping_address": {
                     "first_name": `${req.body.user.name}`,
                     "email": `${req.body.user.email}`,
+                    "phone": `${req.body.wa_user}`,
                     "address": `${req.body.user.alamat}, ${req.body.user.kecamatan}, ${req.body.user.kota}, ${req.body.user.provinsi}`,
                     "city": `${req.body.user.kota}`,
                     "postal_code": `${req.body.user.kode_pos}`,
@@ -188,7 +190,7 @@ router.post("/confirm-payment", async (req, res) => {
 
         //get services
         let service = await prisma.services.findUnique({where:{id:id}})
-        if (!tx) return res.status(404).json({message:"services not found"})
+        if (!service) return res.status(404).json({message:"services not found"})
 
         //get txs
         let tx = await prisma.transactions.findUnique({where:{id:id}, include:{items:true}})
@@ -200,7 +202,7 @@ router.post("/confirm-payment", async (req, res) => {
 
             if (orderId[0] == "VislapServices") {
                 service = await prisma.services.update({where:{id:id}, data:{status_id:4}})
-            return res.sendStatus(200)
+                return res.sendStatus(200)
             }
 
             tx = await prisma.transactions.update({where:{id:id}, data:{status_id:2}, include:{items:true}})
