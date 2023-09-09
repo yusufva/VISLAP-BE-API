@@ -6,7 +6,12 @@ const jwtm = require('../middleware/jwtauth')
 const Validator = require('fastest-validator');
 const { Prisma, PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
-const v = new Validator();
+const v = new Validator({
+    useNewCustomCheckerFunction: true,
+    messages: {
+        notEqual: "{field} and {expected} can not be equal"
+    }
+  });
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -124,6 +129,33 @@ router.put("/profile/:id", jwtm.verifyToken, jwtm.auth([4]), async(req,res)=>{
     return res.json({message:"user profile successfully updated"})
   } catch (e) {
     
+  }
+})
+
+router.put("/password/:id", jwtm.verifyToken, jwtm.auth([4]), async(req,res)=>{
+  
+  const schema = {
+      old_password : {type:"string"},
+      new_password: {type:"string", min:8, field:"old_password", custom:(value, errors, schema, name, parent, context)=>{
+        if (context.data.old_password === value) errors.push({type: "notEqual", expected:schema.field})
+        return value
+      }},
+      confirm_newPassword: {type:"equal",field:"new_password"}
+  }
+  const validate = v.validate(req.body, schema);
+  if (validate.length) return res.status(400).json(validate);
+
+  try {
+      const id = parseInt(req.params.id)
+      let user = await prisma.users.findUnique({where:{id:id}})
+      if(req.id != user.id) return res.status(401).json({message:"you can't change other account's password"})
+      const password = req.body.new_password
+      const salt = await bcrypt.genSalt(13)
+      const hashPassword = await bcrypt.hash(password,salt)
+      user = await prisma.users.update({where:{id:id}, data:{password:hashPassword}})
+      return res.json({message:"password successfully changed"})
+  } catch (e) {
+      return res.status(500).json({message:e.message})
   }
 })
 
