@@ -103,7 +103,13 @@ router.get('/:id', jwt.verifyToken, jwt.auth([2,3,4]), async (req,res) => {
                 },
                 user:{
                     select:{
-                        name:true
+                        name:true,
+                        email:true,
+                        alamat:true,
+                        provinsi:true,
+                        kota:true,
+                        kecamatan:true,
+                        kode_pos:true
                     }
                 }
             }
