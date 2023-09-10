@@ -88,6 +88,65 @@ router.post('/login', async (req,res)=>{
   }
 })
 
+router.post('/reset', async(req,res)=>{
+  const schema = {
+    email: 'email',
+    reset_question: 'string',
+    reset_answer: 'string'
+  }
+  const validate = v.validate(req.body, schema);
+  if (validate.length) return res.status(400).json(validate);
+
+  let user = await prisma.users.findFirst({
+    where:{
+      email:req.body.email
+    },
+    select:{
+      id:true,
+      email:true,
+      name:true,
+      role:true,
+      reset_answer:true,
+      reset_question:true
+    }
+  })
+  if(!user) return res.status(404).json({message:`user with email ${req.body.email} does not exist`})
+  if(user.reset_question!=req.body.reset_question  && user.reset_answer != req.body.reset_answer) return res.status(400).json({message:"question and answer does not match"})
+  const userId = user.id
+  const name = user.name
+  const role = user.role
+  const email = user.email
+  const resetToken = jwt.sign({userId, name, role, email}, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '300s' });
+  return res.json({resetToken:resetToken})
+})
+
+router.put('reset/password', jwtm.verifyToken, async(req,res)=>{
+  const schema = {
+    new_password: 'string|min:8',
+    confirm_newPassword: 'equal|field:new_password'
+  }
+  const validate = v.validate(req.body, schema);
+  if (validate.length) return res.status(400).json(validate);
+
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decode) =>{
+    if(err) return res.sendStatus(403);
+    if(!decode.email) return res.sendStatus(400)
+    req.id = decode.userId;
+    req.name = decode.name;
+    req.role = decode.role;
+    req.email = decode.email;
+    next()
+})
+  let user = await prisma.users.findFirst({where:{AND:{id:req.id,email:req.email}}})
+  if(!user) return res.status(404).json({message:"user not found"})
+  const salt = await bcrypt.genSalt(13)
+  const hashPassword = await bcrypt.hash(req.body.new_password,salt)
+  user = await prisma.users.update({where:{id:req.id}, data:{password:hashPassword}})
+  return res.json({message:"password successfully changed"})
+})
+
 router.get('/profile', jwtm.verifyToken, jwtm.auth([4]), async(req,res)=>{
   const id = req.id
   // return res.json(id)
