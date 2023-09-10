@@ -120,7 +120,7 @@ router.post('/reset', async(req,res)=>{
   return res.json({resetToken:resetToken})
 })
 
-router.put('reset/password', jwtm.verifyToken, async(req,res)=>{
+router.put('/reset', jwtm.verifyToken, async(req,res, next)=>{
   const schema = {
     new_password: 'string|min:8',
     confirm_newPassword: 'equal|field:new_password'
@@ -133,12 +133,8 @@ router.put('reset/password', jwtm.verifyToken, async(req,res)=>{
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decode) =>{
     if(err) return res.sendStatus(403);
     if(!decode.email) return res.sendStatus(400)
-    req.id = decode.userId;
-    req.name = decode.name;
-    req.role = decode.role;
     req.email = decode.email;
-    next()
-})
+  })
   let user = await prisma.users.findFirst({where:{AND:{id:req.id,email:req.email}}})
   if(!user) return res.status(404).json({message:"user not found"})
   const salt = await bcrypt.genSalt(13)
