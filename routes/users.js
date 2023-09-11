@@ -23,7 +23,9 @@ router.post('/registers', async (req,res)=>{
     name : 'string',
     email: 'email',
     password: 'string|min:8',
-    confirm_password: 'equal|field:password'
+    confirm_password: 'equal|field:password',
+    reset_question: 'string',
+    reset_answer: 'string'
   }
   const validate = v.validate(req.body, schema);
   if (validate.length) return res.status(400).json(validate);
@@ -36,7 +38,9 @@ router.post('/registers', async (req,res)=>{
       data:{
         name: req.body.name,
         email: email,
-        password: hashPassword
+        password: hashPassword,
+        reset_question: req.body.reset_question,
+        reset_answer: req.body.reset_answer
       }
     })
     res.status(201).json({message:"user has been successfully registered"})
