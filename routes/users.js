@@ -115,7 +115,7 @@ router.post('/reset', async(req,res)=>{
     }
   })
   if(!user) return res.status(404).json({message:`user with email ${req.body.email} does not exist`})
-  if(user.reset_question!=req.body.reset_question  && user.reset_answer != req.body.reset_answer) return res.status(400).json({message:"question and answer does not match"})
+  if(user.reset_question!=req.body.reset_question  || user.reset_answer != req.body.reset_answer) return res.status(400).json({message:"question and answer does not match"})
   const userId = user.id
   const name = user.name
   const role = user.role
