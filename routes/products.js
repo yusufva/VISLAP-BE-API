@@ -54,7 +54,7 @@ router.put('/:id', jwt.verifyToken, jwt.auth([2]), mtr.upload.single('img'), asy
     if(!req.file) {
         try {
             const id = parseInt(req.params.id);
-            
+            if(id == 30) return res.json({message:"this product can't be deleted"})
             let product = await prisma.products.findUnique({where:{id:id}})
             if (!product) return res.status(404).json({message:"product not found"})
 
@@ -78,7 +78,7 @@ router.put('/:id', jwt.verifyToken, jwt.auth([2]), mtr.upload.single('img'), asy
     } else {
         try {
             const id = parseInt(req.params.id);
-            
+            if(id == 30) return res.json({message:"this product can't be deleted"})
             let product = await prisma.products.findUnique({where:{id:id}})
             if (!product) return res.status(404).json({message:"product not found"})
     
