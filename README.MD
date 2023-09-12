@@ -346,6 +346,11 @@ Install vislap-project with npm
 | `product_name `  | `string`      | **Required**. Transaction product_name |
 | `price`          | `int`         | **Required**. Transaction price        |
 | `quantity`       | `int`         | **Required**. Transaction quantity     |
+| `alamat`      | `string` | **Required**. users alamat |
+| `provinsi`      | `string` | **Required**. users provinsi |
+| `kota`      | `string` | **Required**. users kota |
+| `kecamatan`      | `string` | **Required**. users kecamatan |
+| `kode_pos`      | `string` | **Required**. users kode_pos |
 | `total_price`    | `int`         | **Required**. Transaction total_price  |
 
 
