@@ -177,6 +177,11 @@ router.post('/', jwt.verifyToken, jwt.auth([4]), async (req,res) => {
             quantity: "number|required",
             total_price: "number|required"
         }}},
+        alamat: "string|required",
+        provinsi: "string|required",
+        kota: "string|required",
+        kecamatan: "string|required",
+        kode_pos: "number|required",
         final_price: "number|required"
     };
     const validate = v.validate(req.body, schema);
@@ -189,6 +194,8 @@ router.post('/', jwt.verifyToken, jwt.auth([4]), async (req,res) => {
     const tx = await prisma.transactions.create({
         data: {
             user_id: req.body.user_id,
+            alamat: `${req.body.alamat}, Kecamatan ${req.body.kecamatan}, Kota ${req.body.kota}, Provinsi ${req.body.provinsi}`,
+            kode_pos: req.body.kode_pos,
             final_price: req.body.final_price,
             items:{
                 createMany: {
@@ -202,12 +209,7 @@ router.post('/', jwt.verifyToken, jwt.auth([4]), async (req,res) => {
             user:{
                 select:{
                     name:true,
-                    email:true,
-                    alamat:true,
-                    provinsi:true,
-                    kota:true,
-                    kecamatan:true,
-                    kode_pos:true
+                    email:true
                 }
             }
         }
