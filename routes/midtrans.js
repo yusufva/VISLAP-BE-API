@@ -76,11 +76,6 @@ router.post("/process-payment", jwt.verifyToken, async (req, res) => {
                 },
                 "cimb_va": {
                 "va_number": "1234567891234567"
-                },
-                "cstore": {
-                    "alfamart_free_text_1" : "qwerty",
-                    "alfamart_free_text_2" : "asdfg",
-                    "alfamart_free_text_3" : "zxcvb"
                 }
         }
 
