@@ -97,6 +97,8 @@ model Transactions {
   expiration    DateTime?
   resi          String?
   payment_token String?
+  alamat        String?        @db.Text
+  kode_pos      Int?
   created_at    DateTime         @default(now())
   updated_at    DateTime         @updatedAt
 
