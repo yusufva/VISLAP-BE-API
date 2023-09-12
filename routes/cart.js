@@ -11,7 +11,16 @@ router.get('/', jwt.verifyToken, jwt.auth([4]), async (req,res) => {
     const cart = await prisma.cart.findMany({
         where:{id_user:req.id},
         include: {
-            barang: true
+            barang: true,
+            user:{
+                select:{
+                    alamat:true,
+                    provinsi:true,
+                    kota:true,
+                    kecamatan:true,
+                    kode_pos:true
+                }
+            }
         }
     })
     res.json(cart)
