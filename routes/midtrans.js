@@ -49,7 +49,7 @@ router.post("/process-payment", jwt.verifyToken, async (req, res) => {
                     "country_code": "IDN"
                 }
             },
-            enabled_payments: ["bca_va", "bni_va", "bri_va","cimb_va", "other_va", "gopay", "shopeepay", "indomaret", "alfamart"],
+            enabled_payments: ["bca_va", "bni_va", "bri_va","cimb_va", "other_va"],
             "bca_va": {
                 "va_number": "12345678911",
                 "sub_company_code": "00000",
@@ -124,13 +124,13 @@ router.post("/process-payment/services", jwt.verifyToken, jwt.auth([2]), async (
                     "first_name": `${req.body.user.name}`,
                     "email": `${req.body.user.email}`,
                     "phone": `${req.body.wa_user}`,
-                    "address": `${req.body.user.alamat}, ${req.body.user.kecamatan}, ${req.body.user.kota}, ${req.body.user.provinsi}`,
+                    "address": `${req.body.alamat}`,
                     "city": `${req.body.user.kota}`,
                     "postal_code": `${req.body.user.kode_pos}`,
                     "country_code": "IDN"
                 }
             },
-            enabled_payments: ["bca_va", "bni_va", "bri_va","cimb_va", "other_va", "gopay", "shopeepay", "indomaret", "alfamart"],
+            enabled_payments: ["bca_va", "bni_va", "bri_va","cimb_va", "other_va"],
             "bca_va": {
                 "va_number": "12345678911",
                 "sub_company_code": "00000",
@@ -157,11 +157,6 @@ router.post("/process-payment/services", jwt.verifyToken, jwt.auth([2]), async (
                 },
                 "cimb_va": {
                 "va_number": "1234567891234567"
-                },
-                "cstore": {
-                    "alfamart_free_text_1" : "qwerty",
-                    "alfamart_free_text_2" : "asdfg",
-                    "alfamart_free_text_3" : "zxcvb"
                 }
         }
 
