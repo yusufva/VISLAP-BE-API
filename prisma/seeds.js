@@ -67,13 +67,13 @@ async function serv_status(){
             status_name: "Processed"
         },
         {
+            status_name: "Waiting for pickup"
+        },
+        {
             status_name: "Finished"
         },
         {
             status_name: "Cancelled"
-        },
-        {
-            status_name: "Refund"
         },
     ]
 
@@ -98,6 +98,9 @@ async function transaksi_status(){
         },
         {
             status: "Cancelled"
+        },
+        {
+            status_name: "Refund"
         },
     ]
 
