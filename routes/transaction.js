@@ -191,6 +191,13 @@ router.post('/', jwt.verifyToken, jwt.auth([4]), async (req,res) => {
         .json(validate);
     };
 
+    for (let i in req.body.items){
+        let produk = await prisma.products.findFirst({where:{nama:req.body.items[i].product_name}})
+        if(req.body.items[i].quantity > produk.stock){
+            return res.status(400).json({message:"stock not enough"})
+        }
+    }
+
     const tx = await prisma.transactions.create({
         data: {
             user_id: req.body.user_id,
@@ -256,9 +263,12 @@ router.put('/:id', jwt.verifyToken, jwt.auth([2,4]), async (req,res) => {
 router.delete('/:id', jwt.verifyToken, jwt.auth([1]), async (req,res) => {
     try {
         const id = parseInt(req.params.id);
-        let tx = await prisma.transactions.findUnique({where:{id:id}})
+        let tx = await prisma.transactions.findUnique({where:{id:id}, include:{items:true} })
 
         if (!tx) return res.status(404).json({message:"transaction not found"})
+        for(let i in tx.items){
+            await prisma.items.delete({ where: { id: tx.items[i].id } });
+        }
         tx = await prisma.transactions.delete({where:{id:id}});
         return res.json({message:"transaction successfully deleted"})
     } catch (e) {
